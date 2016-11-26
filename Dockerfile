@@ -1,8 +1,14 @@
-# Instructions copied from - https://hub.docker.com/_/python/
-FROM python:3-onbuild
+FROM ubuntu
+MAINTAINER Kimbro Staken
 
-# tell the port number the container should expose
-EXPOSE 5000
+RUN apt-get install -y software-properties-common python
+RUN add-apt-repository ppa:chris-lea/node.js
+RUN echo "deb http://us.archive.ubuntu.com/ubuntu/ precise universe" >> /etc/apt/sources.list
+RUN apt-get update
+RUN apt-get install -y nodejs
+#RUN apt-get install -y nodejs=0.6.12~dfsg1-1ubuntu1
+RUN mkdir /var/www
 
-# run the command
-CMD ["python", "./app.py"]
+ADD app.js /var/www/app.js
+
+CMD ["/usr/bin/node", "/var/www/app.js"] 
