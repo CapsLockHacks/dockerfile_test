@@ -1,14 +1,11 @@
-FROM ubuntu
-MAINTAINER Kimbro Staken
-
-RUN apt-get install -y software-properties-common python
-RUN add-apt-repository ppa:chris-lea/node.js
-RUN echo "deb http://us.archive.ubuntu.com/ubuntu/ precise universe" >> /etc/apt/sources.list
+FROM ubuntu:14.04
+MAINTAINER Docker Education Team <education@docker.com>
 RUN apt-get update
-RUN apt-get install -y nodejs
-#RUN apt-get install -y nodejs=0.6.12~dfsg1-1ubuntu1
-RUN mkdir /var/www
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q python-all python-pip 
+ADD ./webapp/requirements.txt /tmp/requirements.txt
+RUN pip install -qr /tmp/requirements.txt
+ADD ./webapp /opt/webapp/
+WORKDIR /opt/webapp
+EXPOSE 5000
+CMD ["python", "app.py"]
 
-ADD app.js /var/www/app.js
-
-CMD ["/usr/bin/node", "/var/www/app.js"] 
